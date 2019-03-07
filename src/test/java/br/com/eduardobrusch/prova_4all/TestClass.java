@@ -9,10 +9,10 @@ import br.com.eduardobrusch.prova_4all.pages.MenuPage;
 import br.com.eduardobrusch.prova_4all.selenium.DriverManager;
 
 public class TestClass {
-	
-	
+		
 	@Test
 	public void shouldBuyItems() {
+		
 		WebDriver driver = new DriverManager().getDriver();
 		MenuPage menu = new MenuPage(driver);
 		CartPage cart = new CartPage(driver);
@@ -23,8 +23,9 @@ public class TestClass {
 		menu.selectCategory("Todos");
 		menu.clickCartIcon();
 		cart.setItemAmount("brigadeiro", 4);
-		String message = cart.clickFinishSaleGetMessage();
 		
+		String message = cart.clickFinishSaleGetMessage();		
+		cart.clickCloseFinishedSale();		
 		Assert.assertEquals(message, expectedMessage);
 		
 		driver.quit();
@@ -32,7 +33,33 @@ public class TestClass {
 	
 	@Test
 	public void shouldIncreaseDecreaseThenBuyItems() {
-		Assert.assertEquals(true, true);
+		
+		WebDriver driver = new DriverManager().getDriver();
+		MenuPage menu = new MenuPage(driver);
+		CartPage cart = new CartPage(driver);
+		String expectedMessage = "Pedido realizado com sucesso!";
+		
+		menu.selectCategory("Bebidas");
+		menu.addAllToCart();
+		menu.selectCategory("Todos");
+		menu.addToCart("Rissole médio");
+		menu.clickCartIcon();
+		
+		int currentAmount = Integer.parseInt(cart.getItemAmount("Rissole médio"));
+		
+		cart.setItemAmount("Rissole médio", currentAmount+9);
+		currentAmount = Integer.parseInt(cart.getItemAmount("Rissole médio"));		
+		Assert.assertEquals(currentAmount, 10);
+		
+		cart.setItemAmount("Rissole médio", currentAmount-5);
+		currentAmount = Integer.parseInt(cart.getItemAmount("Rissole médio"));		
+		Assert.assertEquals(currentAmount, 5);
+		
+		String message = cart.clickFinishSaleGetMessage();		
+		cart.clickCloseFinishedSale();		
+		Assert.assertEquals(message, expectedMessage);
+		
+		driver.quit();
 	}
 
 }

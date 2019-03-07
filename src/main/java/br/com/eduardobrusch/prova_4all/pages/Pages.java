@@ -1,11 +1,13 @@
 package br.com.eduardobrusch.prova_4all.pages;
 
+import java.text.Normalizer;
 import java.util.List;
 import java.util.NoSuchElementException;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.testng.Reporter;
 
 public class Pages {
@@ -47,8 +49,12 @@ public class Pages {
 		
 	}
 	
-	protected void logAction(String name, String action) {
-		actionInteractMessage(name, action);
+	protected Actions getActions() {		
+		return new Actions(driver);
+	}
+	
+	protected void log(String log) {
+		Reporter.log(log, logConsole);
 	}
 	
 	private String getErrorGeneral(By name) {
@@ -59,8 +65,12 @@ public class Pages {
 		return String.format("Error! Element located by %s was not found. Test will fail.", element);
 	}
 
-	private String actionInteractMessage(String name, String action) {
+	protected String actionInteractMessage(String name, String action) {
 		return String.format("Executing %s on element: %s.", action, name);
+	}
+	
+	protected String getNormalized(String font) {
+		return Normalizer.normalize(font, Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "");
 	}
 
 }
